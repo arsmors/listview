@@ -1,6 +1,5 @@
 package com.morinscompany.myapplication;
 
-import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,11 +42,17 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, final Response response) throws IOException {
                 try {
                     String jsonData = response.body().string();
-                    JSONObject array = new JSONObject(jsonData);
+                    JSONArray array = new JSONArray(jsonData);
 
                     for (int i = 0; i < array.length(); i++) {
-                        list.add(array.getJSONObject(String.valueOf(i)).getString("id"));
+                        JSONObject jsonObject = array.getJSONObject(i);
+                        list.add(jsonObject.getString("id"));
                     }
+
+                    runOnUiThread(()-> {
+                        setupListViewWithItems(list);
+                    });
+
                 } catch (JSONException ex) {
                     Log.e("JSON-PARSE", ex.getLocalizedMessage());
                 }
@@ -59,10 +64,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ListView listView = (ListView) findViewById(R.id.listView);
 
-//        Resources res = getResources();
-//        final String[] streets = res.getStringArray(R.array.streets_array);
+    }
+
+    private void setupListViewWithItems(final List<String> list) {
+        ListView listView = (ListView) findViewById(R.id.listView);
 
         ArrayAdapter<String> jsonAdapter =
                 new ArrayAdapter<String>(this,
