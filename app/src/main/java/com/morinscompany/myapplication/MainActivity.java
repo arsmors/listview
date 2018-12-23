@@ -43,17 +43,14 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, final Response response) throws IOException {
                 try {
                     String jsonData = response.body().string();
-
                     JSONObject array = new JSONObject(jsonData);
 
                     for (int i = 0; i < array.length(); i++) {
                         list.add(array.getJSONObject(String.valueOf(i)).getString("id"));
                     }
-
                 } catch (JSONException ex) {
                     Log.e("JSON-PARSE", ex.getLocalizedMessage());
                 }
-
             }
 
             @Override
@@ -61,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
         ListView listView = (ListView) findViewById(R.id.listView);
 
